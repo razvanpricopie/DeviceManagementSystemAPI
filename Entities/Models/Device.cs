@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
 
-namespace DeviceManagementSystemAPI.Entities
+namespace Entities.Models
 {
+    [Table("device")]
     public class Device
     {
         public int Id { get; set; }
@@ -15,6 +16,5 @@ namespace DeviceManagementSystemAPI.Entities
         public String OsVersion { get; set; }
         public String Processor { get; set; }
         public String RamAmount { get; set; }
-
     }
 }

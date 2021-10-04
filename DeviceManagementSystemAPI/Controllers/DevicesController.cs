@@ -1,6 +1,8 @@
-﻿using DeviceManagementSystemAPI.Entities;
+﻿using Contracts;
+using Entities.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,13 +14,18 @@ namespace DeviceManagementSystemAPI.Controllers
     [ApiController]
     public class DevicesController : ControllerBase
     {
-        private readonly ApplicationContext _context;
+        private readonly IRepositoryWrapper _repositoryWrapper;
 
-        public DevicesController(ApplicationContext context)
+        public DevicesController(IRepositoryWrapper repositoryWrapper)
         {
-            _context = context;
+            _repositoryWrapper = repositoryWrapper;
         }
 
+        [HttpGet]
+        public IEnumerable<Device> GetDevices()
+        {
+            return _repositoryWrapper.Device.FindAll();
+        }
 
     }
 }

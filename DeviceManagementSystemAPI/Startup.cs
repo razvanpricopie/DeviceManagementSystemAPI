@@ -1,4 +1,3 @@
-using DeviceManagementSystemAPI.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog;
+using System.IO;
+using DeviceManagementSystemAPI.Extensions;
 
 namespace DeviceManagementSystemAPI
 {
@@ -19,6 +21,7 @@ namespace DeviceManagementSystemAPI
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -27,10 +30,16 @@ namespace DeviceManagementSystemAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(opts => 
-                opts.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
+            services.AddCors();
+
+            services.ConfigureLoggerService();
+
+            services.ConfigureSqlServerContext(Configuration);
+
+            services.ConfigureRepositoryWrapper();
 
             services.AddControllers();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +52,11 @@ namespace DeviceManagementSystemAPI
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 

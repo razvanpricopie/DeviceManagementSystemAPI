@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace DeviceManagementSystemAPI.Migrations
+namespace Entities.Migrations
 {
     public partial class InitialCreateDevices : Migration
     {
