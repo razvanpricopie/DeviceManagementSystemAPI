@@ -5,7 +5,9 @@ using Entities.Models;
 
 namespace Contracts
 {
-    public interface IDeviceRepository : IRepositoryBase<Device>
+    public interface IDeviceRepository
     {
+        IEnumerable<Device> GetAllDevices();
+        Device GetDeviceById(int id);
     }
 }
