@@ -73,5 +73,102 @@ namespace DeviceManagementSystemAPI.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult CreateDevice([FromBody]DeviceForCreationDTO device)
+        {
+            try
+            {
+                if (device == null)
+                {
+                    _logger.LogError("Device object sent from the client is null.");
+                    return BadRequest("Device object is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid owner object sent from the client.");
+                    return BadRequest("Invalid device model object");
+                }
+
+                var deviceEntity = _mapper.Map<DeviceForCreationDTO,Device>(device);
+
+                _repositoryWrapper.Device.CreateDevice(deviceEntity);
+                _repositoryWrapper.Save();
+
+                var createdDevice = _mapper.Map<DeviceDTO>(deviceEntity);
+
+                return CreatedAtRoute("DeviceById", new { id = createdDevice.Id }, createdDevice);
+            }
+            catch(Exception e)
+            {
+                _logger.LogError($"Something went wrong inside CreateDevice action: {e.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateDevice(int id, [FromBody]DeviceForUpdateDTO device)
+        {
+            try
+            {
+                if (device == null)
+                {
+                    _logger.LogError("Device object sent from the client is null.");
+                    return BadRequest("Device object is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid owner object sent from the client.");
+                    return BadRequest("Invalid device model object");
+                }
+
+                var deviceEntity = _repositoryWrapper.Device.GetDeviceById(id);
+
+                if (deviceEntity == null)
+                {
+                    _logger.LogError($"Device with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                _mapper.Map(device, deviceEntity);
+
+                _repositoryWrapper.Device.UpdateDevice(deviceEntity);
+                _repositoryWrapper.Save();
+
+                return NoContent();
+            }
+            catch(Exception e)
+            {
+                _logger.LogError($"Something went wrong inside CreateDevice action: {e.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteDevice(int id)
+        {
+            try
+            {
+                var device = _repositoryWrapper.Device.GetDeviceById(id);
+
+                if (device == null)
+                {
+                    _logger.LogError($"Device with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                _repositoryWrapper.Device.DeleteDevice(device);
+                _repositoryWrapper.Save();
+
+                return NoContent();
+            }
+            catch(Exception e)
+            {
+                _logger.LogError($"Something went wrong inside CreateDevice action: {e.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
     }
 }

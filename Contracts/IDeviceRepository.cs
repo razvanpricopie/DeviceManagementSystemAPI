@@ -9,5 +9,8 @@ namespace Contracts
     {
         IEnumerable<Device> GetAllDevices();
         Device GetDeviceById(int id);
+        void CreateDevice(Device device);
+        void UpdateDevice(Device device);
+        void DeleteDevice(Device device);
     }
 }

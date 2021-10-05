@@ -13,6 +13,8 @@ namespace DeviceManagementSystemAPI
         public MappingProfile()
         {
             CreateMap<Device, DeviceDTO>();
+            CreateMap<DeviceForCreationDTO, Device>();
+            CreateMap<DeviceForUpdateDTO,Device>();
         }
     }
 }

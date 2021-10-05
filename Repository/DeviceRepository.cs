@@ -26,5 +26,12 @@ namespace Repository
             return FindByCondition(device => device.Id.Equals(id))
                 .FirstOrDefault();
         }
+
+        public void CreateDevice(Device device) => Create(device);
+
+        public void UpdateDevice(Device device) => Update(device);
+
+        public void DeleteDevice(Device device) => Delete(device);
+
     }
 }
