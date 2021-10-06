@@ -1,10 +1,12 @@
 ﻿using Contracts;
 using Entities;
 using Entities.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -13,18 +15,18 @@ namespace Repository
         public DeviceRepository(RepositoryContext repositoryContext) :base(repositoryContext)
         { }
 
-        public IEnumerable<Device> GetAllDevices()
+        public async Task<IEnumerable<Device>> GetAllDevicesAsync()
         {
-            return FindAll()
+            return await FindAll()
                 .OrderBy(device => device.Type)
                 .ThenBy(device => device.Manufacturer)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Device GetDeviceById(int id)
+        public async Task<Device> GetDeviceByIdAsync(int id)
         {
-            return FindByCondition(device => device.Id.Equals(id))
-                .FirstOrDefault();
+            return await FindByCondition(device => device.Id.Equals(id))
+                .FirstOrDefaultAsync();
         }
 
         public void CreateDevice(Device device) => Create(device);

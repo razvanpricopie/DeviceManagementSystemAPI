@@ -28,11 +28,11 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetDevices()
+        public async Task<IActionResult> GetDevices()
         {
             try
             {
-                var devices = _repositoryWrapper.Device.GetAllDevices();
+                var devices = await _repositoryWrapper.Device.GetAllDevicesAsync();
                 _logger.LogInfo("Returned all devices from DB succesfully");
 
                 var devicesResult = _mapper.Map<IEnumerable<DeviceDTO>>(devices);
@@ -47,11 +47,11 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "DeviceById")]
-        public IActionResult GetDeviceById(int id)
+        public async Task<IActionResult> GetDeviceById(int id)
         {
             try
             {
-                var device = _repositoryWrapper.Device.GetDeviceById(id);
+                var device = await _repositoryWrapper.Device.GetDeviceByIdAsync(id);
 
                 if (device == null)
                 {
@@ -74,7 +74,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateDevice([FromBody]DeviceForCreationDTO device)
+        public async Task<IActionResult> CreateDevice([FromBody]DeviceForCreationDTO device)
         {
             try
             {
@@ -93,7 +93,7 @@ namespace DeviceManagementSystemAPI.Controllers
                 var deviceEntity = _mapper.Map<DeviceForCreationDTO,Device>(device);
 
                 _repositoryWrapper.Device.CreateDevice(deviceEntity);
-                _repositoryWrapper.Save();
+                await _repositoryWrapper.SaveAsync();
 
                 var createdDevice = _mapper.Map<DeviceDTO>(deviceEntity);
 
@@ -107,7 +107,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateDevice(int id, [FromBody]DeviceForUpdateDTO device)
+        public async Task<IActionResult> UpdateDevice(int id, [FromBody]DeviceForUpdateDTO device)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace DeviceManagementSystemAPI.Controllers
                     return BadRequest("Invalid device model object");
                 }
 
-                var deviceEntity = _repositoryWrapper.Device.GetDeviceById(id);
+                var deviceEntity = await _repositoryWrapper.Device.GetDeviceByIdAsync(id);
 
                 if (deviceEntity == null)
                 {
@@ -134,7 +134,7 @@ namespace DeviceManagementSystemAPI.Controllers
                 _mapper.Map(device, deviceEntity);
 
                 _repositoryWrapper.Device.UpdateDevice(deviceEntity);
-                _repositoryWrapper.Save();
+                await _repositoryWrapper.SaveAsync();
 
                 return NoContent();
             }
@@ -146,11 +146,11 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteDevice(int id)
+        public async Task<IActionResult> DeleteDevice(int id)
         {
             try
             {
-                var device = _repositoryWrapper.Device.GetDeviceById(id);
+                var device = await _repositoryWrapper.Device.GetDeviceByIdAsync(id);
 
                 if (device == null)
                 {
@@ -159,7 +159,7 @@ namespace DeviceManagementSystemAPI.Controllers
                 }
 
                 _repositoryWrapper.Device.DeleteDevice(device);
-                _repositoryWrapper.Save();
+                await _repositoryWrapper.SaveAsync();
 
                 return NoContent();
             }

@@ -3,6 +3,7 @@ using Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Repository
 {
@@ -30,9 +31,9 @@ namespace Repository
         }
 
 
-        public void Save()
+        public async Task SaveAsync()
         {
-            _repositoryContext.SaveChanges();
+            await _repositoryContext.SaveChangesAsync();
         }
     }
 }
