@@ -11,6 +11,7 @@ namespace Repository
     {
         private RepositoryContext _repositoryContext;
         private IDeviceRepository _device;
+        private IAuthRepository _user;
 
         public RepositoryWrapper(RepositoryContext repositoryContext)
         {
@@ -27,6 +28,19 @@ namespace Repository
                 }
 
                 return _device;
+            }
+        }
+
+        public IAuthRepository User
+        {
+            get
+            {
+                if (_user == null)
+                {
+                    _user = new AuthRepository(_repositoryContext);
+                }
+
+                return _user;
             }
         }
 

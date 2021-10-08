@@ -2,6 +2,7 @@
 using Contracts;
 using Entities.DTOs;
 using Entities.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repository;
@@ -47,6 +48,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "DeviceById")]
+        [Authorize]
         public async Task<IActionResult> GetDeviceById(int id)
         {
             try
@@ -86,7 +88,7 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 if (!ModelState.IsValid)
                 {
-                    _logger.LogError("Invalid owner object sent from the client.");
+                    _logger.LogError("Invalid device  object sent from the client.");
                     return BadRequest("Invalid device model object");
                 }
 

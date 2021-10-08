@@ -13,6 +13,6 @@ namespace Entities
         }
 
         public DbSet<Device> Devices { get; set; }
-
+        public DbSet<User> Users { get; set; }
     }
 }

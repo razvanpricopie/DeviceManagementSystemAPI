@@ -14,23 +14,36 @@ using System.Threading.Tasks;
 using NLog;
 using System.IO;
 using DeviceManagementSystemAPI.Extensions;
+using Contracts;
+using Repository;
 
 namespace DeviceManagementSystemAPI
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
+        private readonly string _policyName = "CorsPolicy";
+
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy(name: _policyName, builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             services.ConfigureLoggerService();
 
@@ -39,6 +52,9 @@ namespace DeviceManagementSystemAPI
             services.ConfigureRepositoryWrapper();
 
             services.AddAutoMapper(typeof(Startup));
+            services.AddScoped<ITokenService, TokenService>();
+
+            services.AddIdentityServices(Configuration);
 
             services.AddControllers();
 
@@ -54,11 +70,14 @@ namespace DeviceManagementSystemAPI
 
             app.UseHttpsRedirection();
 
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseCors();
+            app.UseCors(_policyName);
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
