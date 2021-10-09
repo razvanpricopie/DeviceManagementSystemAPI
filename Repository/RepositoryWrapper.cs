@@ -11,7 +11,8 @@ namespace Repository
     {
         private RepositoryContext _repositoryContext;
         private IDeviceRepository _device;
-        private IAuthRepository _user;
+        private IAuthRepository _authUser;
+        private IUserRepository _user;
 
         public RepositoryWrapper(RepositoryContext repositoryContext)
         {
@@ -31,19 +32,31 @@ namespace Repository
             }
         }
 
-        public IAuthRepository User
+        public IAuthRepository AuthUser
+        {
+            get
+            {
+                if (_authUser == null)
+                {
+                    _authUser = new AuthRepository(_repositoryContext);
+                }
+
+                return _authUser;
+            }
+        }
+
+        public IUserRepository User
         {
             get
             {
                 if (_user == null)
                 {
-                    _user = new AuthRepository(_repositoryContext);
+                    _user = new UserRepository(_repositoryContext);
                 }
 
                 return _user;
             }
         }
-
 
         public async Task SaveAsync()
         {

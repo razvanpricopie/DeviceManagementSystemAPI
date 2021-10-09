@@ -47,12 +47,12 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 user.Email = user.Email.ToLower();
 
-                if (await _repositoryWrapper.User.UserExists(user.Email))
+                if (await _repositoryWrapper.AuthUser.UserExists(user.Email))
                     return BadRequest("Username already exists");
 
                 var userEntity = _mapper.Map<UserForRegistrationDTO, User>(user);
 
-                _repositoryWrapper.User.Register(userEntity, user.Password);
+                _repositoryWrapper.AuthUser.Register(userEntity, user.Password);
                 await _repositoryWrapper.SaveAsync();
 
                 return StatusCode(201,"User created successfully");
@@ -70,7 +70,7 @@ namespace DeviceManagementSystemAPI.Controllers
         {
             try
             {
-                var userFromRepo = await _repositoryWrapper.User.Login(user.Email, user.Password);
+                var userFromRepo = await _repositoryWrapper.AuthUser.Login(user.Email, user.Password);
 
                 if (userFromRepo == null)
                 {

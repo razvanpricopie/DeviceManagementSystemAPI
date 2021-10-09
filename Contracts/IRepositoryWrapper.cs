@@ -8,7 +8,8 @@ namespace Contracts
     public interface IRepositoryWrapper
     {
         IDeviceRepository Device { get; }
-        IAuthRepository User { get; }
+        IAuthRepository AuthUser { get; }
+        IUserRepository User { get; }
         Task SaveAsync();
     }
 }

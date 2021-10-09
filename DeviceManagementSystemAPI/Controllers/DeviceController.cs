@@ -29,6 +29,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetDevices()
         {
             try
@@ -57,11 +58,11 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 if (device == null)
                 {
-                    _logger.LogError("The device with the specificied id wasn't found in DB");
-                    return NotFound();
+                    _logger.LogError($"Device with id: {id} hasn't been found in db.");
+                    return NotFound($"Device with id: {id} hasn't been found in db.");
                 }
 
-                _logger.LogInfo("The device with the specified id was returned succesfully");
+                _logger.LogInfo($"The device with id: {id} was returned succesfully");
 
                 var deviceResult = _mapper.Map<DeviceDTO>(device);
 
@@ -76,6 +77,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateDevice([FromBody]DeviceForCreationDTO device)
         {
             try
@@ -109,6 +111,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateDevice(int id, [FromBody]DeviceForUpdateDTO device)
         {
             try
@@ -138,16 +141,17 @@ namespace DeviceManagementSystemAPI.Controllers
                 _repositoryWrapper.Device.UpdateDevice(deviceEntity);
                 await _repositoryWrapper.SaveAsync();
 
-                return NoContent();
+                return StatusCode(204, $"The user with id: {id} was updated succesfully");
             }
             catch(Exception e)
             {
-                _logger.LogError($"Something went wrong inside CreateDevice action: {e.Message}");
+                _logger.LogError($"Something went wrong inside UpdateDevice action: {e.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteDevice(int id)
         {
             try
@@ -156,9 +160,11 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 if (device == null)
                 {
-                    _logger.LogError($"Device with id: {id}, hasn't been found in db.");
-                    return NotFound();
+                    _logger.LogError($"Device with id: {id} hasn't been found in db.");
+                    return NotFound($"Device with id: {id} hasn't been found in db.");
                 }
+
+                _logger.LogInfo($"The device with id: {id} was returned succesfully");
 
                 _repositoryWrapper.Device.DeleteDevice(device);
                 await _repositoryWrapper.SaveAsync();
@@ -167,10 +173,9 @@ namespace DeviceManagementSystemAPI.Controllers
             }
             catch(Exception e)
             {
-                _logger.LogError($"Something went wrong inside CreateDevice action: {e.Message}");
+                _logger.LogError($"Something went wrong inside DeleteDevice action: {e.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }
-
     }
 }
