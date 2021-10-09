@@ -10,8 +10,19 @@ namespace Entities.Models
     public class User
     {
         public int Id { get; set; }
-        public string UserName { get; set; }
+
+        [Required(ErrorMessage = "Email is required")]
+        [StringLength(30, ErrorMessage = "Username must contain maxim 30 characters")]
+        [EmailAddress]
+        public string Email { get; set; }
+
         public byte[] PasswordHash { get; set; }
+
         public byte[] PasswordSalt { get; set; }
+
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(30, ErrorMessage = "Name must contain maxim 30 characters")]
+        public string Name { get; set; }
+        public string Location { get; set; }
     }
 }

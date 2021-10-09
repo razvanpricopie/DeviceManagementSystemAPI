@@ -18,7 +18,7 @@ namespace Repository
 
         public async Task<User> Login(string username, string password)
         {
-            var user = await FindByCondition(user => user.UserName == username).FirstOrDefaultAsync();
+            var user = await FindByCondition(user => user.Email == username).FirstOrDefaultAsync();
 
             if (user == null)
                 return null;
@@ -62,9 +62,9 @@ namespace Repository
             }
         }
 
-        public async Task<bool> UserExists(string username)
+        public async Task<bool> UserExists(string email)
         {
-            var user = await FindByCondition(user => user.UserName == username).FirstOrDefaultAsync();
+            var user = await FindByCondition(user => user.Email == email).FirstOrDefaultAsync();
 
             if (user != null) 
                 return true;

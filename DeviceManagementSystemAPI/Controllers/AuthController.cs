@@ -45,9 +45,9 @@ namespace DeviceManagementSystemAPI.Controllers
                     return BadRequest("Invalid user model object");
                 }
 
-                user.UserName = user.UserName.ToLower();
+                user.Email = user.Email.ToLower();
 
-                if (await _repositoryWrapper.User.UserExists(user.UserName))
+                if (await _repositoryWrapper.User.UserExists(user.Email))
                     return BadRequest("Username already exists");
 
                 var userEntity = _mapper.Map<UserForRegistrationDTO, User>(user);
@@ -55,7 +55,7 @@ namespace DeviceManagementSystemAPI.Controllers
                 _repositoryWrapper.User.Register(userEntity, user.Password);
                 await _repositoryWrapper.SaveAsync();
 
-                return StatusCode(201);
+                return StatusCode(201,"User created successfully");
             }
             catch(Exception e)
             {
@@ -70,7 +70,7 @@ namespace DeviceManagementSystemAPI.Controllers
         {
             try
             {
-                var userFromRepo = await _repositoryWrapper.User.Login(user.UserName, user.Password);
+                var userFromRepo = await _repositoryWrapper.User.Login(user.Email, user.Password);
 
                 if (userFromRepo == null)
                 {
@@ -83,8 +83,8 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 return Ok(new
                 {
-                    user = userFromRepo.UserName,
-                    token = token
+                    Email = userFromRepo.Email,
+                    Token = token
                 });
             }
             catch(Exception e)
