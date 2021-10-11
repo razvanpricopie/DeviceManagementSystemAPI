@@ -7,6 +7,7 @@ namespace Entities.DTOs.User
 {
     public class UserDTO
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [StringLength(30, ErrorMessage = "Username must contain maxim 30 characters")]
         [EmailAddress]
