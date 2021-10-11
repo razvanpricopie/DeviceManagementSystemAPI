@@ -14,5 +14,7 @@ namespace Entities.DTOs.User
         [Required(ErrorMessage = "Password is required")]
         [MinLength(8, ErrorMessage = "Password must contain minimum 8 characters")]
         public string Password { get; set; }
+
+        public string Name { get; set; }
     }
 }

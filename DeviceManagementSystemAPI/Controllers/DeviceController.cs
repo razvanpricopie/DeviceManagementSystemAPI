@@ -141,7 +141,7 @@ namespace DeviceManagementSystemAPI.Controllers
                 _repositoryWrapper.Device.UpdateDevice(deviceEntity);
                 await _repositoryWrapper.SaveAsync();
 
-                return StatusCode(204, $"The user with id: {id} was updated succesfully");
+                return NoContent();
             }
             catch(Exception e)
             {

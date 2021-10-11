@@ -84,7 +84,8 @@ namespace DeviceManagementSystemAPI.Controllers
                 return Ok(new
                 {
                     Email = userFromRepo.Email,
-                    Token = token
+                    Token = token,
+                    Name = userFromRepo.Name
                 });
             }
             catch(Exception e)
