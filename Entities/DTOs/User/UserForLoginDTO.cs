@@ -16,5 +16,6 @@ namespace Entities.DTOs.User
         public string Password { get; set; }
 
         public string Name { get; set; }
+        public ICollection<RoleDTO> Roles { get; set; }
     }
 }

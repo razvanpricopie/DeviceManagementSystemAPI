@@ -18,7 +18,10 @@ namespace Repository
 
         public async Task<User> Login(string username, string password)
         {
-            var user = await FindByCondition(user => user.Email == username).FirstOrDefaultAsync();
+            var user = await FindByCondition(user => user.Email == username)
+                .Include(userRole => userRole.UserRoles)
+                .ThenInclude(role => role.Role)
+                .FirstOrDefaultAsync();
 
             if (user == null)
                 return null;

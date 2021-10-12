@@ -33,7 +33,7 @@ namespace DeviceManagementSystemAPI.Controllers
             {
                 var users = await _repositoryWrapper.User.GetAllUsersAsync();
                 _logger.LogInfo("Returned all users from DB succesfully");
-
+                
                 var usersResult = _mapper.Map<IEnumerable<UserDTO>>(users);
                 return Ok(usersResult);
             }

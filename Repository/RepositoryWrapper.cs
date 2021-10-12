@@ -13,6 +13,8 @@ namespace Repository
         private IDeviceRepository _device;
         private IAuthRepository _authUser;
         private IUserRepository _user;
+        private IUserRoleRepository _userRole;
+
 
         public RepositoryWrapper(RepositoryContext repositoryContext)
         {
@@ -55,6 +57,19 @@ namespace Repository
                 }
 
                 return _user;
+            }
+        }
+
+        public IUserRoleRepository UserRole
+        {
+            get
+            {
+                if (_userRole == null)
+                {
+                    _userRole = new UserRoleRepository(_repositoryContext);
+                }
+
+                return _userRole;
             }
         }
 

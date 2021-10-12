@@ -23,6 +23,7 @@ namespace Entities.Models
         [Required(ErrorMessage = "Name is required")]
         [StringLength(30, ErrorMessage = "Name must contain maxim 30 characters")]
         public string Name { get; set; }
-        public string Location { get; set; }
+
+        public ICollection<UserRole> UserRoles { get; set; }
     }
 }

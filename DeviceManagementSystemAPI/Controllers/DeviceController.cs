@@ -15,6 +15,7 @@ namespace DeviceManagementSystemAPI.Controllers
 {
     [Route("api/device")]
     [ApiController]
+    [Authorize]
     public class DeviceController : ControllerBase
     {
         private ILoggerManager _logger;
@@ -29,7 +30,6 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetDevices()
         {
             try
@@ -49,7 +49,6 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpGet("{id}", Name = "DeviceById")]
-        [Authorize]
         public async Task<IActionResult> GetDeviceById(int id)
         {
             try
@@ -77,7 +76,6 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> CreateDevice([FromBody]DeviceForCreationDTO device)
         {
             try
@@ -111,7 +109,6 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize]
         public async Task<IActionResult> UpdateDevice(int id, [FromBody]DeviceForUpdateDTO device)
         {
             try
@@ -151,7 +148,6 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> DeleteDevice(int id)
         {
             try

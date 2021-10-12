@@ -20,8 +20,9 @@ namespace Repository
 
         public IQueryable<T> FindAll()
         {
-            return this.RepositoryContext.Set<T>().AsNoTracking();
+            return this.RepositoryContext.Set<T>();
         }
+
 
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression)
         {

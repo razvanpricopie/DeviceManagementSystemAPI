@@ -16,6 +16,8 @@ using System.IO;
 using DeviceManagementSystemAPI.Extensions;
 using Contracts;
 using Repository;
+using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DeviceManagementSystemAPI
 {
@@ -56,7 +58,11 @@ namespace DeviceManagementSystemAPI
 
             services.AddIdentityServices(Configuration);
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
         }
 

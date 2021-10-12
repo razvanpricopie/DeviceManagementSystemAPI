@@ -18,13 +18,18 @@ namespace Repository
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             return await FindAll()
+                .Include(userRole => userRole.UserRoles)
+                .ThenInclude(role => role.Role)
                 .OrderBy(user => user.Email)
                 .ToListAsync();
         }
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            return await FindByCondition(user => user.Id.Equals(id)).FirstOrDefaultAsync();
+            return await FindByCondition(user => user.Id.Equals(id))
+                .Include(userRole => userRole.UserRoles)
+                .ThenInclude(role => role.Role)
+                .FirstOrDefaultAsync();
         }
 
         public void UpdateUser(User user) => Update(user);

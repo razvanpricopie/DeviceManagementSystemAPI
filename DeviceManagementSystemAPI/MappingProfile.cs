@@ -18,7 +18,12 @@ namespace DeviceManagementSystemAPI
             CreateMap<DeviceForUpdateDTO,Device>();
             CreateMap<UserForRegistrationDTO, User>();
             CreateMap<UserForLoginDTO, User>();
-            CreateMap<User, UserDTO>();
+            CreateMap<User, UserForLoginDTO>()
+                .ForMember(dto => dto.Roles, opt => opt.MapFrom(ur => ur.UserRoles.Select(role => role.Role).ToList()));
+            CreateMap<Role, RoleDTO>();
+            CreateMap<RoleDTO, Role>();
+            CreateMap<User, UserDTO>()
+                .ForMember(dto => dto.Roles, opt => opt.MapFrom(ur => ur.UserRoles.Select(role => role.Role).ToList()));
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Contracts
         IDeviceRepository Device { get; }
         IAuthRepository AuthUser { get; }
         IUserRepository User { get; }
+        IUserRoleRepository UserRole {get; }
         Task SaveAsync();
     }
 }
