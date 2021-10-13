@@ -9,11 +9,12 @@ namespace Repository
 {
     public class RepositoryWrapper : IRepositoryWrapper
     {
-        private RepositoryContext _repositoryContext;
+        public RepositoryContext _repositoryContext;
         private IDeviceRepository _device;
         private IAuthRepository _authUser;
         private IUserRepository _user;
         private IUserRoleRepository _userRole;
+        private ILocationRepository _location;
 
 
         public RepositoryWrapper(RepositoryContext repositoryContext)
@@ -70,6 +71,18 @@ namespace Repository
                 }
 
                 return _userRole;
+            }
+        }
+        public ILocationRepository Location
+        {
+            get
+            {
+                if (_location == null)
+                {
+                    _location = new LocationRepository(_repositoryContext);
+                }
+
+                return _location;
             }
         }
 

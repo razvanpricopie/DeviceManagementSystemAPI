@@ -18,6 +18,7 @@ namespace Repository
         public async Task<IEnumerable<Device>> GetAllDevicesAsync()
         {
             return await FindAll()
+                .Include(device => device.User)
                 .OrderBy(device => device.Type)
                 .ThenBy(device => device.Manufacturer)
                 .ToListAsync();
@@ -42,15 +43,25 @@ namespace Repository
         public async Task<bool> CheckIfUserHasDevice(int deviceId,int userId)
         {
 
-            //var s =  
-
             var device = await FindByCondition(device => (device.Id.Equals(deviceId)) && (device.UserId.Equals(userId))).FirstOrDefaultAsync();
 
-            if (device != null) return false;
+            if (device != null) 
+                return false;
+            
             return true;
         }
 
         public void CreateDevice(Device device) => Create(device);
+
+        public async Task<bool> DeviceExists(Device deviceAdd)
+        {
+            var existingDevice = await FindByCondition(device => (device.Name.Equals(deviceAdd.Name)) && (device.Manufacturer.Equals(deviceAdd.Manufacturer))).FirstOrDefaultAsync();
+
+            if (existingDevice != null)
+                return true;
+
+            return false;
+        }
 
         public void UpdateDevice(Device device) => Update(device);
 

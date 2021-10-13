@@ -32,6 +32,12 @@ namespace Repository
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<User> GetUserForLocation(int id)
+        {
+            return await FindByCondition(user => user.Id.Equals(id))
+                .FirstOrDefaultAsync();
+        }
+
         public void UpdateUser(User user) => Update(user);
 
         public void DeleteUser(User user) => Delete(user);

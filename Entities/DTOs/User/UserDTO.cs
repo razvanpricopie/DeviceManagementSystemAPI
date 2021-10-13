@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.DTOs.Location;
+using Entities.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,5 +23,6 @@ namespace Entities.DTOs.User
         public string Name { get; set; }
 
         public DeviceDTO Device { get; set; }
+
     }
 }

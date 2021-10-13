@@ -57,7 +57,6 @@ namespace Entities.Migrations
                         .HasColumnType("nvarchar(60)");
 
                     b.Property<int>("Type")
-                        .HasMaxLength(60)
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -73,6 +72,29 @@ namespace Entities.Migrations
                         .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("device");
+                });
+
+            modelBuilder.Entity("Entities.Models.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Latitude")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Longitude")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("userId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("Entities.Models.Role", b =>
@@ -142,6 +164,15 @@ namespace Entities.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Entities.Models.Location", b =>
+                {
+                    b.HasOne("Entities.Models.User", "user")
+                        .WithMany("Locations")
+                        .HasForeignKey("userId");
+
+                    b.Navigation("user");
+                });
+
             modelBuilder.Entity("Entities.Models.UserRole", b =>
                 {
                     b.HasOne("Entities.Models.Role", "Role")
@@ -169,6 +200,8 @@ namespace Entities.Migrations
             modelBuilder.Entity("Entities.Models.User", b =>
                 {
                     b.Navigation("Device");
+
+                    b.Navigation("Locations");
 
                     b.Navigation("UserRoles");
                 });

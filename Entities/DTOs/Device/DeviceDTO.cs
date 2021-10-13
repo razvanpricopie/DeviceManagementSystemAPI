@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.DTOs.User;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -16,5 +17,6 @@ namespace Entities.DTOs
         public String RamAmount { get; set; }
         public bool isAssigned { get; set; }
         public int UserId { get; set; }
+        public UserDTO User { get; set; }
     }
 }

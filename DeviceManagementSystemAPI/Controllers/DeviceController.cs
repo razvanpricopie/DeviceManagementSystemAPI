@@ -95,6 +95,12 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 var deviceEntity = _mapper.Map<DeviceForCreationDTO, Device>(device);
 
+                if (await _repositoryWrapper.Device.DeviceExists(deviceEntity))
+                {
+                    _logger.LogError("This device already exist in the DB");
+                    return BadRequest("This device already exist in the DB");
+                }
+
                 _repositoryWrapper.Device.CreateDevice(deviceEntity);
                 await _repositoryWrapper.SaveAsync();
 

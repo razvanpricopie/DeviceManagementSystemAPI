@@ -16,7 +16,6 @@ namespace Entities.DTOs
         public String Manufacturer { get; set; }
 
         [Required(ErrorMessage = "Type is required")]
-        [StringLength(20, ErrorMessage = "Type can't be longer than 20 characters")]
         public int Type { get; set; }
 
         [Required(ErrorMessage = "Operating system is required")]
