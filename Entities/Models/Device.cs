@@ -21,7 +21,7 @@ namespace Entities.Models
 
         [Required(ErrorMessage = "Type is required")]
         [StringLength(60, ErrorMessage = "Type can't be longer than 20 characters")]
-        public String Type { get; set; }
+        public int Type { get; set; }
 
         [Required(ErrorMessage = "Operating system is required")]
         [StringLength(60, ErrorMessage = "Operating system can't be longer than 20 characters")]
@@ -38,5 +38,10 @@ namespace Entities.Models
         [Required(ErrorMessage = "Ram Amount is required")]
         [StringLength(60, ErrorMessage = "Ram Amount can't be longer than 10 characters")]
         public String RamAmount { get; set; }
+
+        public bool isAssigned { get; set; }
+
+        public int? UserId { get; set; }
+        public User User { get; set; }
     }
 }

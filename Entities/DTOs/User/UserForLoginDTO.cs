@@ -7,6 +7,7 @@ namespace Entities.DTOs.User
 {
     public class UserForLoginDTO
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; }
@@ -17,5 +18,7 @@ namespace Entities.DTOs.User
 
         public string Name { get; set; }
         public ICollection<RoleDTO> Roles { get; set; }
+
+        public DeviceDTO Device { get; set; }
     }
 }

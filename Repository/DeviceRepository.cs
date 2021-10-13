@@ -12,7 +12,7 @@ namespace Repository
 {
     public class DeviceRepository : RepositoryBase<Device>, IDeviceRepository
     {
-        public DeviceRepository(RepositoryContext repositoryContext) :base(repositoryContext)
+        public DeviceRepository(RepositoryContext repositoryContext) : base(repositoryContext)
         { }
 
         public async Task<IEnumerable<Device>> GetAllDevicesAsync()
@@ -27,6 +27,27 @@ namespace Repository
         {
             return await FindByCondition(device => device.Id.Equals(id))
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> GetDeviceByUserId(int userId)
+        {
+            var device = await FindByCondition(device => device.UserId.Equals(userId))
+                .FirstOrDefaultAsync();
+
+            if (device != null) return true;
+            return false;
+        }
+
+
+        public async Task<bool> CheckIfUserHasDevice(int deviceId,int userId)
+        {
+
+            //var s =  
+
+            var device = await FindByCondition(device => (device.Id.Equals(deviceId)) && (device.UserId.Equals(userId))).FirstOrDefaultAsync();
+
+            if (device != null) return false;
+            return true;
         }
 
         public void CreateDevice(Device device) => Create(device);

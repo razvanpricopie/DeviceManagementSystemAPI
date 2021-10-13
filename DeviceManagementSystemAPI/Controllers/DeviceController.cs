@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Contracts;
 using Entities.DTOs;
+using Entities.DTOs.Device;
 using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -67,7 +68,7 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 return Ok(deviceResult);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError($"Something went wrong inside GetAllDevices action: {e.Message}");
 
@@ -76,7 +77,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDevice([FromBody]DeviceForCreationDTO device)
+        public async Task<IActionResult> CreateDevice([FromBody] DeviceForCreationDTO device)
         {
             try
             {
@@ -92,7 +93,7 @@ namespace DeviceManagementSystemAPI.Controllers
                     return BadRequest("Invalid device model object");
                 }
 
-                var deviceEntity = _mapper.Map<DeviceForCreationDTO,Device>(device);
+                var deviceEntity = _mapper.Map<DeviceForCreationDTO, Device>(device);
 
                 _repositoryWrapper.Device.CreateDevice(deviceEntity);
                 await _repositoryWrapper.SaveAsync();
@@ -101,7 +102,7 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 return CreatedAtRoute("DeviceById", new { id = createdDevice.Id }, createdDevice);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError($"Something went wrong inside CreateDevice action: {e.Message}");
                 return StatusCode(500, "Internal server error");
@@ -109,7 +110,7 @@ namespace DeviceManagementSystemAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDevice(int id, [FromBody]DeviceForUpdateDTO device)
+        public async Task<IActionResult> UpdateDevice(int id, [FromBody] DeviceForUpdateDTO device)
         {
             try
             {
@@ -140,7 +141,7 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 return NoContent();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError($"Something went wrong inside UpdateDevice action: {e.Message}");
                 return StatusCode(500, "Internal server error");
@@ -167,9 +168,110 @@ namespace DeviceManagementSystemAPI.Controllers
 
                 return NoContent();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError($"Something went wrong inside DeleteDevice action: {e.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPut("AssignDevice/{id}")]
+        public async Task<ActionResult> AssignDevice(int id, [FromBody] DeviceForAssignDTO device)
+        {
+            try
+            {
+                if (device == null)
+                {
+                    _logger.LogError("Device object sent from the client is null.");
+                    return BadRequest("Device object is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid owner object sent from the client.");
+                    return BadRequest("Invalid device model object");
+                }
+
+                var userHasAnotherDevice = await _repositoryWrapper.Device.GetDeviceByUserId(device.UserId);
+                if (userHasAnotherDevice)
+                {
+                    _logger.LogError($"Device with id: {id}, is already assigned to you.");
+                    return BadRequest("Another device is already assigned to you.");
+                }
+
+                var deviceEntity = await _repositoryWrapper.Device.GetDeviceByIdAsync(id);
+
+                if (deviceEntity == null)
+                {
+                    _logger.LogError($"Device with id: {id}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                if (deviceEntity.isAssigned)
+                {
+                    _logger.LogError($"Device with id: {id}, is already assigned to another user.");
+                    return BadRequest("This device is already assigned to another user");
+                }
+
+                deviceEntity.isAssigned = true;
+                _mapper.Map(device, deviceEntity);
+
+                _repositoryWrapper.Device.UpdateDevice(deviceEntity);
+                await _repositoryWrapper.SaveAsync();
+
+                return NoContent();
+            }
+            catch(Exception e)
+            {
+                _logger.LogError($"Something went wrong inside AssignDevice action: {e.Message}");
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPut("UnassignDevice/{deviceId}")]
+        public async Task<ActionResult> UnassignDevice(int deviceId, [FromBody] DeviceForAssignDTO device)
+        {
+            try
+            {
+
+                if (device == null)
+                {
+                    _logger.LogError("Device object sent from the client is null.");
+                    return BadRequest("Device object is null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    _logger.LogError("Invalid owner object sent from the client.");
+                    return BadRequest("Invalid device model object");
+                }
+
+                var checkUserHasDevice = await _repositoryWrapper.Device.CheckIfUserHasDevice(deviceId, device.UserId);
+                if (checkUserHasDevice)
+                {
+                    _logger.LogError($"Device with id: {deviceId}, is not assigned to you.");
+                    return BadRequest("This device is not assign to you.");
+                }
+
+                var deviceEntity = await _repositoryWrapper.Device.GetDeviceByIdAsync(deviceId);
+
+                if (deviceEntity == null)
+                {
+                    _logger.LogError($"Device with id: {deviceId}, hasn't been found in db.");
+                    return NotFound();
+                }
+
+                deviceEntity.UserId = null;
+                deviceEntity.isAssigned = false;
+
+                _repositoryWrapper.Device.UpdateDevice(deviceEntity);
+                await _repositoryWrapper.SaveAsync();
+
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Something went wrong inside AssignDevice action: {e.Message}");
                 return StatusCode(500, "Internal server error");
             }
         }

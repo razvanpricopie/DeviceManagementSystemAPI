@@ -10,6 +10,8 @@ namespace Contracts
     {
         Task<IEnumerable<Device>> GetAllDevicesAsync();
         Task<Device> GetDeviceByIdAsync(int id);
+        Task<bool> GetDeviceByUserId(int id);
+        Task<bool> CheckIfUserHasDevice(int deviceId, int userId);
         void CreateDevice(Device device);
         void UpdateDevice(Device device);
         void DeleteDevice(Device device);

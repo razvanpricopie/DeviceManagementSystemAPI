@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Entities.DTOs;
+using Entities.DTOs.Device;
 using Entities.DTOs.User;
 using Entities.Models;
 using System;
@@ -16,6 +17,7 @@ namespace DeviceManagementSystemAPI
             CreateMap<Device, DeviceDTO>();
             CreateMap<DeviceForCreationDTO, Device>();
             CreateMap<DeviceForUpdateDTO,Device>();
+            CreateMap<DeviceForAssignDTO, Device>();
             CreateMap<UserForRegistrationDTO, User>();
             CreateMap<UserForLoginDTO, User>();
             CreateMap<User, UserForLoginDTO>()

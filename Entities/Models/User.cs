@@ -25,5 +25,7 @@ namespace Entities.Models
         public string Name { get; set; }
 
         public ICollection<UserRole> UserRoles { get; set; }
+
+        public Device Device { get; set; }
     }
 }

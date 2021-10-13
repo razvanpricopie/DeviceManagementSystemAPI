@@ -56,12 +56,21 @@ namespace Entities.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<int>("Type")
                         .HasMaxLength(60)
-                        .HasColumnType("nvarchar(60)");
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isAssigned")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("device");
                 });
@@ -124,6 +133,15 @@ namespace Entities.Migrations
                     b.ToTable("userRole");
                 });
 
+            modelBuilder.Entity("Entities.Models.Device", b =>
+                {
+                    b.HasOne("Entities.Models.User", "User")
+                        .WithOne("Device")
+                        .HasForeignKey("Entities.Models.Device", "UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Entities.Models.UserRole", b =>
                 {
                     b.HasOne("Entities.Models.Role", "Role")
@@ -150,6 +168,8 @@ namespace Entities.Migrations
 
             modelBuilder.Entity("Entities.Models.User", b =>
                 {
+                    b.Navigation("Device");
+
                     b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618

@@ -20,5 +20,7 @@ namespace Entities.DTOs.User
         [Required(ErrorMessage = "Name is required")]
         [StringLength(30, ErrorMessage = "Name must contain maxim 30 characters")]
         public string Name { get; set; }
+
+        public DeviceDTO Device { get; set; }
     }
 }

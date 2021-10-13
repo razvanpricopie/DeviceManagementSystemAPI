@@ -91,7 +91,8 @@ namespace DeviceManagementSystemAPI.Controllers
                     Email = userResult.Email,
                     Token = token,
                     Name = userResult.Name,
-                    Role = userResult.Roles
+                    Role = userResult.Roles,
+                    Id = userResult.Id
                 });
             }
             catch(Exception e)
